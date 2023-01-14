@@ -1,7 +1,7 @@
 import * as Hound from 'hound'
+import { BUCKET_VIDEO_PATH } from './constants/paths';
 import { generateMabyVideoWithNewResolution } from './utils/video'
 
-const BUCKET_VIDEO_PATH = '../bucket/videos'
 const resolutions = ['2560x1440', '2048x1080', '1920x1080', '1280x720', '640x480']
 
 const watcher = Hound.watch(`${BUCKET_VIDEO_PATH}/originals`, {ignored: /^\./, persistent: true});
