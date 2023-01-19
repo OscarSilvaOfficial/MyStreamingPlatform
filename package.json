@@ -16,11 +16,5 @@
   "bugs": {
     "url": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform/issues"
   },
-  "homepage": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform#readme",
-  "dependencies": {
-    "chokidar": "^3.5.3"
-  },
-  "devDependencies": {
-    "@types/chokidar": "^2.1.3"
-  }
+  "homepage": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform#readme"
 }
