@@ -13,12 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: branch_name
+
     - name: Determine if bug fix
-      if: contains($(basename ${GITHUB_REF#refs/heads/}).outputs.branch_name, 'fix')
+      if: contains(steps.branch_name.outputs.branch_name, 'fix')
       run: echo "::set-output name=is_bug_fix::true"
 
     - name: Determine else bug fix
-      if: "!contains($(basename ${GITHUB_REF#refs/heads/}).outputs.branch_name, 'fix')"
+      if: "!contains(steps.branch_name.outputs.branch_name, 'fix')"
       run: echo "::set-output name=is_bug_fix::false"
 
     - name: Update version
