@@ -13,12 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Determine if bug fix
-      if: contains(${{ github.event.pull_request.base.ref }}, 'fix')
-      run: echo "::set-output name=is_bug_fix::true"
-
     - name: Update version
-      if: steps.determine_if_bug_fix.outputs.is_bug_fix == 'true'
       run: |
         version=$(cat package.json | jq -r '.version')
         major=$(echo $version | awk -F '.' '{print $1}')
