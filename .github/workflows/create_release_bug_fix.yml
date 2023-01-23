@@ -13,6 +13,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
+    # - name: Get branch name
+    #   run: echo "Branch name: $(basename $GITHUB_REF)"
+    #   id: branch_name
+      
     - name: Determine release type
       run: |
         if [[ "${{ steps.branch_name.outputs.branch_name }}" == *"fix"* ]]; then
