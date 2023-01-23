@@ -11,9 +11,9 @@ jobs:
 
     steps:
     - name: Print context
-      run: echo "${{ github.head_ref }}"
+      run: echo "Branch mergerd is ${{ github.head_ref }}"
 
-    # - name: Create Release
-    #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
-    #   run: |
-    #     curl -H "Authorization: token ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.get_version.outputs.version }}\", \"name\": \"Release v${{ steps.get_version.outputs.version }}\", \"body\": \"Release version ${{ steps.get_version.outputs.version }}\"}" https://api.github.com/repos/${{ github.repository }}/releases
+    - name: Create Release
+      if: contains('${{ github.head_ref }}', 'fix')
+      run: |
+        curl -H "Authorization: token ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.get_version.outputs.version }}\", \"name\": \"Release v${{ steps.get_version.outputs.version }}\", \"body\": \"Release version ${{ steps.get_version.outputs.version }}\"}" https://api.github.com/repos/${{ github.repository }}/releases
