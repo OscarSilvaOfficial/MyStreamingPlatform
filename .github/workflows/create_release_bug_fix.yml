@@ -26,4 +26,14 @@ jobs:
         elif [[ "${{ steps.branch_name.outputs.branch_name }}" == *"release"* ]]; then
           echo "::set-output name=release_type::major"
         else
-          echo "::set-
+          echo "::set-output name=release_type::none"
+      
+    - name: Generate release
+      if: steps.determine_release_type.outputs.release_type != 'none'
+      uses: actions/create-release@v2
+      with:
+        tag_name: v0.0.1
+        release_name: Release v0.0.1
+        release_notes: ${{ steps.determine_release_type.outputs.release_type }} release
+        draft: false
+        prerelease: false
