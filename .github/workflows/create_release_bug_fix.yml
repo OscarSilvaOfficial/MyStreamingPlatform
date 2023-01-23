@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Print context
-      run: echo "${{ toJson(github) }}" 
 
     - name: Checkout code
       uses: actions/checkout@v2
