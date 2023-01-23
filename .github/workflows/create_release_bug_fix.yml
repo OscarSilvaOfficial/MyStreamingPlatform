@@ -18,23 +18,4 @@ jobs:
 
     - name: Create Release
       run: |
-        npm install @octokit/rest
-        node << EOF
-        const { Octokit } = require("@octokit/rest");
-        const { version } = process.env;
-
-        const octokit = new Octokit({ auth: "${{ secrets.GITHUB_TOKEN }}" });
-        const GITHUB_REPOSITORY = "${{ env.GITHUB_REPOSITORY }}" || process.env.GITHUB_REPOSITORY
-
-        async function createRelease() {
-          const { data } = await octokit.repos.createRelease({
-            owner: "${{github.repository_owner}}",
-            repo: decodeURIComponent(GITHUB_REPOSITORY),
-            tag_name: "v" + version,
-            name: "Release v" + version,
-          });
-          console.log(data);
-        }
-
-        createRelease();
-        EOF
+        curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.get_version.outputs.version }}\", \"name\": \"Release v${{ steps.get_version.outputs.version }}\", \"body\": \"Release version ${{ steps.get_version.outputs.version }}\"}" https://api.github.com/repos/${{ env.GITHUB_REPOSITORY }}/releases
