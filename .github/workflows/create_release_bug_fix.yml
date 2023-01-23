@@ -14,7 +14,7 @@ jobs:
       run: echo "Branch mergerd is ${{ github.head_ref }}"
 
     - name: Install semantic-release
-      run: npx semantic-release-cli@5.4.4 --install
+      run: npm install -g semantic-release-cli
 
     - name: Run semantic-release
       env:
