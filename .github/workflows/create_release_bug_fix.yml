@@ -1,4 +1,4 @@
-name: Release on merge
+name: Create Release
 
 on:
   push:
@@ -8,29 +8,18 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      
-    - name: Determine release type
-      run: |
-        if [[ "${{ steps.branch_name.outputs.branch_name }}" == *"fix"* ]]; then
-          echo "::set-output name=release_type::bugfix"
-        elif [[ "${{ steps.branch_name.outputs.branch_name }}" == *"feat"* ]]; then
-          echo "::set-output name=release_type::minor"
-        elif [[ "${{ steps.branch_name.outputs.branch_name }}" == *"release"* ]]; then
-          echo "::set-output name=release_type::major"
-        else
-          echo "::set-output name=release_type::none"
-          
-    - name: Set up NPM_AUTH_TOKEN
-      run: echo "::set-env name=NPM_AUTH_TOKEN::${{ secrets.NPM_AUTH_TOKEN }}"
+
+    - name: Create release
+      if: github.ref == 'refs/heads/main'
+      uses: actions/create-release@v1
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        
-    - name: Generate release
-      if: steps.determine_release_type.outputs.release_type != 'none'
-      uses: actions/create-release
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        repository_name: 'OWNER/'
+        tag_name: v1.0.0
+        release_name: Release v1.0.0
+        draft: false
+        prerelease: false
