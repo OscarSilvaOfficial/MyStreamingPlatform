@@ -15,7 +15,7 @@ jobs:
 
     # Atualização do package.json
     - name: Update package.json patch version
-      if: ${{ contains(github.head_ref, 'fix') }}
+      if: ${{ contains(github.head_ref, 'fix') }} 
       run: npm --no-git-tag-version version patch
 
     - name: Update package.json minor version
