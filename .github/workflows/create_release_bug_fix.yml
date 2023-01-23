@@ -13,9 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Get merged branch
+    - name: Get PR information
       run: |
-        BRANCH=$(git branch --merged main | grep -v 'main')
+        PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        PR_INFO=$(curl -s -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER)
+        BRANCH=$(echo $PR_INFO | jq -r .head.ref)
+        echo "Merged branch: $BRANCH"
 
     - name: Log branch name
       shell: bash
