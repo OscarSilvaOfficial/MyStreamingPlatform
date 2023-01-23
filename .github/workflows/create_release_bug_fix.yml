@@ -13,16 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Get PR information
-      run: |
-        PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        PR_INFO=$(curl -s -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER)
-        BRANCH=$(echo $PR_INFO | jq -r .head.ref)
-        echo "Merged branch: $BRANCH | PR Number: $PR_NUMBER | PR_INFO: $PR_INFO"
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ merge_ref }}
 
     - name: Log branch name
       shell: bash
-      run: echo "Branch merged | $BRANCH"
+      run: echo "Branch merged | ${{ merge_ref }}"
 
     # - name: Create Release
     #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
