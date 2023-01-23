@@ -13,17 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: branch_name
+    - name: Set Branch name
+      run: |
+        BRANCH=$(cat ${{ github.event_path }} | jq --raw-output '.ref')
+        echo "${{ github.repository }} has ${BRANCH} branch"
+        echo "::set-env name=STAGE::$(echo ${BRANCH})"
 
     - name: Determine if bug fix
-      if: contains(steps.branch_name.outputs.branch, 'fix')
+      if: contains(STAGE:$STAGE, 'fix')
       run: echo "::set-output name=is_bug_fix::true"
 
     - name: Determine else bug fix
-      if: "!contains(steps.branch_name.outputs.branch, 'fix')"
+      if: "!contains(STAGE:$STAGE, 'fix')"
       run: echo "::set-output name=is_bug_fix::false"
 
     - name: Update version
