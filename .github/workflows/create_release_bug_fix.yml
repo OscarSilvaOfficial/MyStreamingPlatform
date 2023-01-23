@@ -10,16 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Branch mergerd
-      run: echo "Branch mergerd is ${{ github.head_ref }}"
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Install semantic-release
-      run: npm install -g semantic-release-cli
-
-    - name: Run semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      run: npx semantic-release
+    - name: Update package.json version
+      run: |
+        npm --no-git-tag-version version patch
+        
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "you@example.com"
+        git config --local user.name "Your Name"
+        git add package.json
+        git commit -m "Update package.json version"
+        git push origin main
 
     # - name: Create Release
     #   if: contains('${{ github.head_ref }}', 'fix')
