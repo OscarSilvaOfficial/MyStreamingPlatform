@@ -29,8 +29,8 @@ jobs:
           const { data } = await client.repos.createRelease({
             owner: "${{ github.repository_owner }}",
             repo: "${{ github.repository }}",
-            tag_name: `v${version}`,
-            name: `Release v${version}`,
+            tag_name: "v" + version,
+            name: "Release v" + version,
           });
           console.log(data);
         }
