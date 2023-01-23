@@ -13,6 +13,9 @@ jobs:
     - name: Branch mergerd
       run: echo "Branch mergerd is ${{ github.head_ref }}"
 
+    - name: Authenticate with GitHub Package Registry
+      run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.TOKEN }}" > ~/.npmrc 
+
     - name: Update package.json
       run: npm version patch
 
