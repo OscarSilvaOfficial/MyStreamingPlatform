@@ -13,23 +13,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # ATUALIZAÇÃO DO PACKAGE.JSON
+    # Atualização do package.json
     - name: Update package.json patch version
-      if: contains('${{ github.head_ref }}', 'fix')
-      run: |
-        npm --no-git-tag-version version patch
+      if: "contains('${{ github.head_ref }}', 'fix')"
+      run: npm --no-git-tag-version version patch
 
     - name: Update package.json minor version
-      if: contains('${{ github.head_ref }}', 'feat')
-      run: |
-        npm --no-git-tag-version version minor
+      if: "contains('${{ github.head_ref }}', 'feat')"
+      run: npm --no-git-tag-version version minor
 
     - name: Update package.json major version
-      if: contains('${{ github.head_ref }}', 'release')
-      run: |
-        npm --no-git-tag-version version major
+      if: "contains('${{ github.head_ref }}', 'release')"
+      run: npm --no-git-tag-version version major
 
-    # PUSH PARA O GITHUB
+    # Push para o github
     - name: Commit and push changes
       run: |
         git remote remove origin
@@ -40,7 +37,7 @@ jobs:
         git commit -m "Update package.json version"
         git push origin main
 
-    # PEGA A VERSÃO NO PACKAGE.JSON
+    # Pega versão atual do package.json
     - name: Extract version
       id: extract_version
       uses: Saionaro/extract-package-version@v1.0.6
@@ -48,6 +45,8 @@ jobs:
     - name: Print version
       run: echo "Repository version ${{ steps.extract_version.outputs.version }}"
 
+
+    # Criação da release
     - name: Create Release
       run: |
         curl -H "Authorization: token ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.extract_version.outputs.version }}\", \"name\": \"Release v${{ steps.extract_version.outputs.version }}\", \"body\": \"Release version ${{ steps.extract_version.outputs.version }}\"}" https://api.github.com/repos/${{ github.repository }}/releases
