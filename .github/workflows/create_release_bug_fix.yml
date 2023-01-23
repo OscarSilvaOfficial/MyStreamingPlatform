@@ -18,18 +18,18 @@ jobs:
 
     - name: Create Release
       run: |
-        npm install octokit
+        npm install @octokit/rest
         node << EOF
-        const { Octokit } = require("octokit");
+        const { Octokit } = require("@octokit/rest");
         const { version } = process.env;
 
-        const client = new Octokit();
+        const octokit = new Octokit({ auth: "${{ secrets.GITHUB_TOKEN }}" });
 
         async function createRelease() {
-          const { data } = await client.repos.createRelease({
+          const { data } = await octokit.repos.createRelease({
             owner: "${{ github.repository_owner }}",
             repo: "${{ github.repository }}",
-            tag_name: "v" + version,
+            tag_name: "v" + version, 
             name: "Release v" + version,
           });
           console.log(data);
