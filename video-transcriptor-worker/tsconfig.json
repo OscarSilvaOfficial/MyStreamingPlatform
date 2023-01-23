@@ -1,6 +1,0 @@
-{
-  "compilerOptions": {
-    "checkJs": false,
-    "esModuleInterop": true
-  }
-}
