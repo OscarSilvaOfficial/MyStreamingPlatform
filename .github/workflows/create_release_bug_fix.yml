@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Print context
+    - name: Branch mergerd
       run: echo "Branch mergerd is ${{ github.head_ref }}"
 
     - name: Update package.json
       run: npm version patch
-      
+
     - name: Commit and push the changes
       run: |
         git config --local user.email "action@github.com"
