@@ -18,11 +18,12 @@ jobs:
       id: branch_name
 
     - name: Determine if bug fix
-      run: |
-        if [[ "${{ steps.branch_name.outputs.branch_name }}" == *"fix"* ]]; then
-          echo "::set-output name=is_bug_fix::true"
-        else
-          echo "::set-output name=is_bug_fix::false"
+      if: "contains(steps.branch_name.outputs.branch_name, 'fix')"
+      run: echo "::set-output name=is_bug_fix::true"
+
+    - name: Determine else bug fix
+      if: "!contains(steps.branch_name.outputs.branch_name, 'fix')"
+      run: echo "::set-output name=is_bug_fix::false"
 
     - name: Update version
       if: steps.determine_if_bug_fix.outputs.is_bug_fix == 'true'
