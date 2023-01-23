@@ -17,10 +17,6 @@ jobs:
       if: contains(${{ github.event.pull_request.base.ref }}, 'fix')
       run: echo "::set-output name=is_bug_fix::true"
 
-    - name: Determine else bug fix
-      if: "!contains(${{ github.event.pull_request.base.ref }}, 'fix')"
-      run: echo "::set-output name=is_bug_fix::false"
-
     - name: Update version
       if: steps.determine_if_bug_fix.outputs.is_bug_fix == 'true'
       run: |
