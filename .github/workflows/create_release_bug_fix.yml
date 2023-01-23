@@ -23,12 +23,12 @@ jobs:
           echo "::set-output name=release_type::major"
         else
           echo "::set-output name=release_type::none"
-      env:
-        release_type: ${{ steps.determine_release_type.outputs.release_type }}
       
     - name: Generate release
-      if: env.release_type != 'none'
+      if: steps.determine_release_type.outputs.release_type != 'none'
+      env:
+        release_type: ${{ steps.determine_release_type.outputs.release_type }}
       run: |
-        echo "Creating a ${env.release_type} release"
+        echo "Creating a ${{ env.release_type }} release"
         git tag -a v0.0.1 -m "Release v0.0.1"
         git push --tags
