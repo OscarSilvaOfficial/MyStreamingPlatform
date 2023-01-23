@@ -26,9 +26,8 @@ jobs:
       
     - name: Generate release
       if: steps.determine_release_type.outputs.release_type != 'none'
-      env:
-        release_type: ${{ steps.determine_release_type.outputs.release_type }}
       run: |
-        echo "Creating a ${{ env.release_type }} release"
-        git tag -a v0.0.1 -m "Release v0.0.1"
+        version=$(date +%Y%m%d%H%M%S)
+        echo "Creating a release version ${version} with ${steps.determine_release_type.outputs.release_type} release"
+        git tag -a ${version} -m "Release ${version}"
         git push --tags
