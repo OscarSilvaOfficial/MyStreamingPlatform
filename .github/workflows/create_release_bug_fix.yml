@@ -3,7 +3,7 @@ name: Release on merge
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   release:
