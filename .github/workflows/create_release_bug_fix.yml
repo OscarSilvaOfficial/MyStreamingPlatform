@@ -13,14 +13,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+    - name: Get merged branch
+      run: |
+        BRANCH=$(git branch --merged main | grep -v 'main')
 
     - name: Log branch name
       shell: bash
-      run: echo "${{ steps.extract_branch.outputs.branch }}"
+      run: echo "Branch merged | $BRANCH"
 
     # - name: Create Release
     #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
