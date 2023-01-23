@@ -28,7 +28,7 @@ jobs:
         async function createRelease() {
           const { data } = await octokit.repos.createRelease({
             owner: "${{github.repository_owner}}",
-            repo: "${{github.repository}}",
+            repo: decodeURIComponent("${{github.repository}}"),
             tag_name: "v" + version,
             name: "Release v" + version,
           });
