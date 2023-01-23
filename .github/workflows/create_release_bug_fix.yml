@@ -3,7 +3,7 @@ name: Release on merge
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   release:
@@ -26,8 +26,10 @@ jobs:
       
     - name: Generate release
       if: steps.determine_release_type.outputs.release_type != 'none'
-      run: |
-        version=$(date +%Y%m%d%H%M%S)
-        echo "Creating a release version ${version} with ${steps.determine_release_type.outputs.release_type} release"
-        git tag -a ${version} -m "Release ${version}"
-        git push --tags
+      uses: ncipollo/create-release-action@v1.1.1
+      with:
+        tag_name: v0.0.1
+        release_name: Release v0.0.1
+        release_notes: ${{ steps.determine_release_type.outputs.release_type }} release
+        draft: false
+        prerelease: false
