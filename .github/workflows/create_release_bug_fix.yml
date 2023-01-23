@@ -18,4 +18,4 @@ jobs:
 
     - name: Create Release
       run: |
-        curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.get_version.outputs.version }}\", \"name\": \"Release v${{ steps.get_version.outputs.version }}\", \"body\": \"Release version ${{ steps.get_version.outputs.version }}\"}" https://api.github.com/repos/${{ env.GITHUB_REPOSITORY }}/releases
+        curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.get_version.outputs.version }}\", \"name\": \"Release v${{ steps.get_version.outputs.version }}\", \"body\": \"Release version ${{ steps.get_version.outputs.version }}\"}" https://api.github.com/repos/${{ github.repository_owner }}/${{ github.repository }}/releases
