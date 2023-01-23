@@ -13,10 +13,23 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Update package.json version
+    # ATUALIZAÇÃO DO PACKAGE.JSON
+    - name: Update package.json patch version
+      if: contains('${{ github.head_ref }}', 'fix')
       run: |
         npm --no-git-tag-version version patch
 
+    - name: Update package.json minor version
+      if: contains('${{ github.head_ref }}', 'feat')
+      run: |
+        npm --no-git-tag-version version minor
+
+    - name: Update package.json major version
+      if: contains('${{ github.head_ref }}', 'release')
+      run: |
+        npm --no-git-tag-version version major
+
+    # PUSH PARA O GITHUB
     - name: Commit and push changes
       run: |
         git remote remove origin
@@ -27,7 +40,14 @@ jobs:
         git commit -m "Update package.json version"
         git push origin main
 
-    # - name: Create Release
-    #   if: contains('${{ github.head_ref }}', 'fix')
-    #   run: |
-    #     curl -H "Authorization: token ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.get_version.outputs.version }}\", \"name\": \"Release v${{ steps.get_version.outputs.version }}\", \"body\": \"Release version ${{ steps.get_version.outputs.version }}\"}" https://api.github.com/repos/${{ github.repository }}/releases
+    # PEGA A VERSÃO NO PACKAGE.JSON
+    - name: Extract version
+      id: extract_version
+      uses: Saionaro/extract-package-version@v1.0.6
+
+    - name: Print version
+      run: echo "Repository version ${{ steps.extract_version.outputs.version }}"
+
+    - name: Create Release
+      run: |
+        curl -H "Authorization: token ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -X POST -d "{\"tag_name\": \"v${{ steps.extract_version.outputs.version }}\", \"name\": \"Release v${{ steps.extract_version.outputs.version }}\", \"body\": \"Release version ${{ steps.extract_version.outputs.version }}\"}" https://api.github.com/repos/${{ github.repository }}/releases
