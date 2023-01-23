@@ -1,4 +1,4 @@
-name: Release on merge to main with word fix in branch
+name: Release on merge
 
 on:
   push:
@@ -8,23 +8,32 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       
-    - name: Use semantic-release
-      run: npx -p node@v18-lts -c "npx semantic-release -E @semantic-release/exec"
-      env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        NODE_ENV: production
-
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-      with:
-        tag_name: ${{ env.TAG_NAME }}
-        release_name: 'Release v${{ env.TAG_NAME }}'
-        draft: false
-        prerelease: false
+    - name: Get branch name
+      run: echo "Branch name: ${GITHUB_REF#refs/heads/}"
+      id: branch_name
+      
+    - name: Determine release type
+      run: |
+        if [[ "${{ steps.branch_name.outputs.branch_name }}" == *"fix"* ]]; then
+          echo "::set-output name=release_type::bugfix"
+        elif [[ "${{ steps.branch_name.outputs.branch_name }}" == *"feat"* ]]; then
+          echo "::set-output name=release_type::minor"
+        elif [[ "${{ steps.branch_name.outputs.branch_name }}" == *"release"* ]]; then
+          echo "::set-output name=release_type::major"
+        else
+          echo "::set-output name=release_type::none"
+      
+    - name: Generate release
+      if: steps.determine_release_type.outputs.release_type != 'none'
+      run: |
+        release_type=${{ steps.determine_release_type.outputs.release_type }}
+        echo "Creating a ${{ release_type }} release"
+        # Use the appropriate command to generate a release and tag
+        # Replace <OWNER> and <REPO> with the appropriate values
+        git tag -a v0.0.1 -m "Release v0.0.1"
+        git push --tags
