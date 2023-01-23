@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Print context
-      run: echo "${{ toJson(github) }}"
+      run: echo "${{ github.head_ref }}"
 
     # - name: Create Release
     #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
