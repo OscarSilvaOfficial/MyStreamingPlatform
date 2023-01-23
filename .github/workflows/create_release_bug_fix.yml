@@ -12,14 +12,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+    - name: Set env variables
+      run: echo ::set-env name=TAG_NAME::$(echo 'v'$(date +%y.%m.%d.%H%M%S))
     - name: Create release
-      if: github.ref == 'refs/heads/main'
-      uses: actions/create-release@v1
+      uses: github-actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v1.0.0
-        release_name: Release v1.0.0
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: Release ${{ env.TAG_NAME }}
         draft: false
         prerelease: false
