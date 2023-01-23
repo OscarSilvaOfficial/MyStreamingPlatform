@@ -17,10 +17,9 @@ jobs:
       run: "echo Current version: $(jq -r '.version' package.json)"
 
     - name: Create Release
-      uses: actions/create-release@v1
+      uses: github/create-release-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ steps.get_version.outputs.version }}
         release_name: Release v${{ steps.get_version.outputs.version }}
-        draft: false
