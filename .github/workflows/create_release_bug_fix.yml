@@ -14,12 +14,26 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Get version from package.json
-      run: "echo Current version: $(jq -r '.version' package.json)"
+      run: echo "::set-output name=version::$(jq -r '.version' package.json)"
 
     - name: Create Release
-      uses: github/create-release-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ steps.get_version.outputs.version }}
-        release_name: Release v${{ steps.get_version.outputs.version }}
+      run: |
+        npm install octokit
+        node << EOF
+        const octokit = require("octokit");
+        const { version } = process.env;
+
+        const client = new octokit();
+
+        async function createRelease() {
+          const { data } = await client.repos.createRelease({
+            owner: "${{ github.repository_owner }}",
+            repo: "${{ github.repository }}",
+            tag_name: `v${version}`,
+            name: `Release v${version}`,
+          });
+          console.log(data);
+        }
+
+        createRelease();
+        EOF
