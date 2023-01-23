@@ -1,4 +1,4 @@
-name: Create Tag and Update Version
+name: Release
 
 on:
   push:
@@ -13,13 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Update version
-      run: |
-        version=$(cat package.json | jq -r '.version')
-        major=$(echo $version | awk -F '.' '{print $1}')
-        minor=$(echo $version | awk -F '.' '{print $2}')
-        patch=$(echo $version | awk -F '.' '{print $3}')
-        new_patch=$((patch + 1))
-        new_version="$major.$minor.$new_patch"
-        echo $new_version > version.txt
-        sed -i "
+    - name: Get version from package.json
+      run: "echo Current version: $(jq -r '.version' package.json)"
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        release_name: Release v${{ steps.get_version.outputs.version }}
+        draft: false
