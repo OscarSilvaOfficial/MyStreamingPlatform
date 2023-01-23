@@ -13,10 +13,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
-    # - name: Get branch name
-    #   run: echo "Branch name: $(basename ${GITHUB_REF#refs/heads/})"
-    #   id: branch_name
-      
     - name: Determine release type
       run: |
         if [[ "${{ steps.branch_name.outputs.branch_name }}" == *"fix"* ]]; then
@@ -27,13 +23,14 @@ jobs:
           echo "::set-output name=release_type::major"
         else
           echo "::set-output name=release_type::none"
-      
+          
+    - name: Set up NPM_AUTH_TOKEN
+      run: echo "::set-env name=NPM_AUTH_TOKEN::${{ secrets.NPM_AUTH_TOKEN }}"
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        
     - name: Generate release
       if: steps.determine_release_type.outputs.release_type != 'none'
-      uses: actions/create-release@v2
+      uses: actions/create-release
       with:
-        tag_name: v0.0.1
-        release_name: Release v0.0.1
-        release_notes: ${{ steps.determine_release_type.outputs.release_type }} release
-        draft: false
-        prerelease: false
+        repository_name: 'OWNER/'
