@@ -13,10 +13,11 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Use semantic-release
-      run: npx semantic-release -E @semantic-release/exec
+      run: npx -p node@v18-lts -c "npx semantic-release -E @semantic-release/exec"
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         NODE_ENV: production
+
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
