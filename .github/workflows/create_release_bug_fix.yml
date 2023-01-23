@@ -10,14 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ merge_ref }}
+    - name: Print context
+      run: echo "${{ toJson(github) }}" 
+
+    # - name: Checkout code
+    #   uses: actions/checkout@v2
+    #   with:
+    #     ref: ${{ merge_ref }}
         
-    - name: Log branch name
-      shell: bash
-      run: echo "Branch merged | ${{ merge_ref }}"
+    # - name: Log branch name
+    #   shell: bash
+    #   run: echo "Branch merged | ${{ merge_ref }}"
 
     # - name: Create Release
     #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
