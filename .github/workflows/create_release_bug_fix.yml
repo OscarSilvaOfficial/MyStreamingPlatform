@@ -24,13 +24,11 @@ jobs:
         const { version } = process.env;
 
         const octokit = new Octokit({ auth: "${{ secrets.GITHUB_TOKEN }}" });
-        const repository_name = decodeURIComponent("${{ env.GITHUB_REPOSITORY }}")
-        const repository_owner = repository_name.split('/')[0];
 
         async function createRelease() {
           const { data } = await octokit.repos.createRelease({
-            owner: repository_owner,
-            repo: repository_name,
+            owner: "${{github.repository_owner}}",
+            repo: decodeURIComponent("${{ env.GITHUB_REPOSITORY }}"),
             tag_name: "v" + version,
             name: "Release v" + version,
           });
