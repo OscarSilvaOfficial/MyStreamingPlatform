@@ -1,4 +1,4 @@
-name: Create Release
+name: Create Tag and Update Version
 
 on:
   push:
@@ -12,14 +12,26 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Set env variables
-      run: echo ::set-env name=TAG_NAME::$(echo 'v'$(date +%y.%m.%d.%H%M%S))
-    - name: Create release
-      uses: github-actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.TAG_NAME }}
-        release_name: Release ${{ env.TAG_NAME }}
-        draft: false
-        prerelease: false
+
+    - name: Get branch name
+      run: "echo 'Branch name: $(basename ${GITHUB_REF#refs/heads/})'"
+      id: branch_name
+
+    - name: Determine if bug fix
+      run: |
+        if [[ "${{ steps.branch_name.outputs.branch_name }}" == *"fix"* ]]; then
+          echo "::set-output name=is_bug_fix::true"
+        else
+          echo "::set-output name=is_bug_fix::false"
+
+    - name: Update version
+      if: steps.determine_if_bug_fix.outputs.is_bug_fix == 'true'
+      run: |
+        version=$(cat package.json | jq -r '.version')
+        major=$(echo $version | awk -F '.' '{print $1}')
+        minor=$(echo $version | awk -F '.' '{print $2}')
+        patch=$(echo $version | awk -F '.' '{print $3}')
+        new_patch=$((patch + 1))
+        new_version="$major.$minor.$new_patch"
+        echo $new_version > version.txt
+        sed -i "
