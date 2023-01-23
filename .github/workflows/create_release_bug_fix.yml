@@ -20,7 +20,7 @@ jobs:
 
     - name: Log branch name
       shell: bash
-      run: echo "${{ steps.extract_branch.outputs.* }}"
+      run: echo "${{ steps.extract_branch.outputs.branch }}"
 
     # - name: Create Release
     #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
