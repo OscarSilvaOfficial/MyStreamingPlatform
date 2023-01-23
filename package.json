@@ -1,14 +1,15 @@
 {
   "name": "mystreamingplatform",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "## Description",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OscarSilvaOfficial/MyStreamingPlatform.git"
+    "url": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform.git"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform/issues"
   },
-  "homepage": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform#readme"
+  "homepage": "https://github.com/OscarSilvaOfficial/MyStreamingPlatform#readme",
+  "devDependencies": {
+    "semantic-release": "^20.0.3"
+  }
 }
