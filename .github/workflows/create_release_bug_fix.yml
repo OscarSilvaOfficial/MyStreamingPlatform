@@ -1,9 +1,9 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
   release:
@@ -13,14 +13,14 @@ jobs:
     - name: Print context
       run: echo "${{ toJson(github) }}" 
 
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
-    #   with:
-    #     ref: ${{ merge_ref }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ merge_ref }}
         
-    # - name: Log branch name
-    #   shell: bash
-    #   run: echo "Branch merged | ${{ merge_ref }}"
+    - name: Log branch name
+      shell: bash
+      run: echo "Branch merged | ${{ merge_ref }}"
 
     # - name: Create Release
     #   if: contains('${{ env.PROJECT_TO_TEST }}', 'SomeString')
